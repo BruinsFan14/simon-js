@@ -1,0 +1,119 @@
+<HTML>
+    <head>
+        <title>Simon Says Game</title>
+        <style>
+            header {
+                text-align: center;
+                font-size: 50px;
+                color: bisque;
+            }
+            body {
+                background-color: darkslategray;
+            }
+            p{
+                font-size: 30px;
+                color: gainsboro;
+                font-family:'Trebuchet MS';
+            }
+            button{
+                font-size:30px;
+                font-family:'Lucida Sans Unicode';
+            }
+        </style>
+    
+<script>
+    const userPattern = []; // creates array named userPattern
+    const On = ['clickedOnImages/0.png', 'clickedOnImages/1.png', 'clickedOnImages/2.png', 'clickedOnImages/3.png']; // array of images that change the image to a different one
+    const Off = ['0.png','1.png','2.png','3.png']; // creates array for off images
+    const gamePattern = [0, 1, 2, 3]; // array of possible numbers to pick from 
+    var points = 0; // sets points value to 0
+    var levels = 0; // sets levels value to 0
+    let x = 0; // sets x value to zero
+function start(){ // function that starts the game and is linked to a onclick
+    document.getElementById("button").disabled = true; // disables button
+    setTimeout(randomColor, 700);  // sets timer for 700 milliseconds to call function named randomColor
+}
+function randomColor(){
+    let randNum = Math.floor(Math.random() * 3);// generates a random number
+    console.log(x);
+    levels++; // adds one to level counter
+    console.log("level " + levels); 
+    userPattern.push(randNum); // pushs random number in array
+    x = 0; // sets x to zero
+    lightOn(); // calls lightOn function
+}
+function lightOn(){
+    document.getElementById(userPattern[x]).src = On[userPattern[x]];
+    setTimeout(lightOff, 200); //calls lightOff function afteer 300 milliseconds 
+    console.log(userPattern);
+    document.getElementById("levels").innerHTML = "Levels:" + levels; // displays level value
+    document.getElementById("points").innerHTML = "Points:" + points; // displays point value
+}
+function lightOff(){ // function to change images back to normal
+    console.log(`light On = ${On[userPattern[x]]}`)
+    console.log(`light Off = ${Off[userPattern[x]]}`)
+    document.getElementById(userPattern[x]).src = Off[userPattern[x]] // change image to lights off
+    console.log(`x=${x}`);
+    if(++x < userPattern.length) 
+    {
+        setTimeout(lightOn, 600); //sets timer to turn lights on 
+    }
+    else
+    {
+        x = 0; // sets x value back to zero
+    }
+    
+}  
+function test(id){ // function that test whether the color that was choosen or not is in the array
+    //console.log(`userPat = ${userPattern[x]}, x = ${x}`)
+    console.log(gamePattern[id]);
+    //console.log(`On = ${On[userPattern[x]]}, x = ${x}`)
+    //console.log("light On");
+    //document.getElementById(userPattern[x]).src = On[userPattern[x]];
+        if (gamePattern[id] === userPattern[x]) // if game pattern id has same vaule as userPattern[x]
+    { 
+        if(++x == userPattern.length){
+            setTimeout(randomColor, 600); // calls randomcolor function after 600 milliseconds
+            points++; // adds one to point counter
+
+       }   
+    }
+    else
+    {
+        console.log("Wrong");
+        clearTimeout(randomColor); // clears timer for randomColor
+        clearTimeout(lightOn);  // clears timer for lightOn
+        clearTimeout(lightOff);  // clears timer for lightOff
+        userPattern.splice(x); // deletes all the variables in userPattern array
+        document.getElementById("button").disabled = false; // enabled the button 
+        document.getElementById("lost").innerHTML = "You lost click start game to try again"; // displays text that you lost
+        points = 0; // lets point value to zero
+        levels = 0; // lets level value to zero
+        x = 0; // lets x value to zero
+    }
+    
+    }
+</script>
+</head>
+
+<header>Simon Game</header>
+<br>
+<body>
+<div class="container-fluid">
+    <div class="row" style="text-align: center;">
+        <img src="0.png" id="0" onclick="test('0')">
+        <img src="1.png" id="1" onclick="test('1')">
+        <p id="levels">Levels: </p>
+    <div class="row" style="text-align: center;">
+        <img src="2.png" id="2"  onclick="test('2')">
+        <img src="3.png" id="3"  onclick="test('3')">
+    </div>
+
+<button id="button" onclick="start()">Start Game</button>
+<p id="points">Points: </p>
+<p id="lost"></p>
+</div>
+
+
+</body>
+</HTML>
